@@ -6,8 +6,6 @@ import { usePlaylistStore } from '@/state/playlistStore';
 import { useParentalStore } from '@/state/parentalStore';
 import { useToast } from '@/components/ui/Toast';
 import { PinSetupModal } from '@/components/parental/PinSetupModal';
-import { useMoviesStore } from '@/state/moviesStore';
-import { useSeriesStore } from '@/state/seriesStore';
 import { useSettingsStore, LANGUAGE_NAMES, type Language, type SubtitleSize } from '@/state/settingsStore';
 
 // ─── SVG Icons (28×28) ────────────────────────────────────────────────────────
@@ -365,108 +363,11 @@ function HideCategoriesModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ─── Modal: Film Kategorilerini Gizle ────────────────────────────────────────
-
-function HideVodCategoriesModal({ onClose }: { onClose: () => void }) {
-  const { t } = useTranslation();
-  const allCategories = useMoviesStore((s) => s.categories);
-  const hiddenCategoryIds = useMoviesStore((s) => s.hiddenCategoryIds);
-  const toggleHidden = useMoviesStore((s) => s.toggleHiddenCategory);
-
-  const regulars = allCategories.filter(
-    (c) => c.id !== '__recent__' && c.id !== '__resume__' && c.id !== '__favorites__'
-  );
-
-  return (
-    <ModalBase
-      focusKey="HIDE_VOD_CAT_MODAL"
-      initialFocus={regulars.length > 0 ? 'hide-vod-cat-item-0' : 'hide-vod-cat-close'}
-      title={t('modal.hide_vod_categories.title')}
-      onClose={onClose}
-    >
-      <p className="font-serif italic text-[14px] text-white/45 mb-5">
-        {t('modal.hide_vod_categories.description')}
-      </p>
-      <div className="flex-1 overflow-y-auto flex flex-col gap-1 pr-1 min-h-0">
-        {regulars.length === 0 && (
-          <p className="font-serif italic text-[14px] text-white/35 px-3 py-4">
-            {t('modal.hide_vod_categories.not_loaded')}
-          </p>
-        )}
-        {regulars.map((cat, idx) => (
-          <CheckItem
-            key={cat.id}
-            focusKey={`hide-vod-cat-item-${idx}`}
-            label={cat.label}
-            count={cat.count}
-            checked={hiddenCategoryIds.includes(cat.id)}
-            isLast={idx === regulars.length - 1}
-            onToggle={() => toggleHidden(cat.id)}
-          />
-        ))}
-      </div>
-      <div className="mt-6 flex justify-end">
-        <ModalCloseBtn focusKey="hide-vod-cat-close" onPress={onClose} />
-      </div>
-    </ModalBase>
-  );
-}
-
-// ─── Modal: Dizi Kategorilerini Gizle ────────────────────────────────────────
-
-function HideSeriesCategoriesModal({ onClose }: { onClose: () => void }) {
-  const { t } = useTranslation();
-  const allCategories = useSeriesStore((s) => s.categories);
-  const hiddenCategoryIds = useSeriesStore((s) => s.hiddenCategoryIds);
-  const toggleHidden = useSeriesStore((s) => s.toggleHiddenCategory);
-
-  const regulars = allCategories.filter(
-    (c) => c.id !== '__recent__' && c.id !== '__resume__' && c.id !== '__watchlist__'
-  );
-
-  return (
-    <ModalBase
-      focusKey="HIDE_SERIES_CAT_MODAL"
-      initialFocus={regulars.length > 0 ? 'hide-series-cat-item-0' : 'hide-series-cat-close'}
-      title={t('modal.hide_series_categories.title')}
-      onClose={onClose}
-    >
-      <p className="font-serif italic text-[14px] text-white/45 mb-5">
-        {t('modal.hide_series_categories.description')}
-      </p>
-      <div className="flex-1 overflow-y-auto flex flex-col gap-1 pr-1 min-h-0">
-        {regulars.length === 0 && (
-          <p className="font-serif italic text-[14px] text-white/35 px-3 py-4">
-            {t('modal.hide_series_categories.not_loaded')}
-          </p>
-        )}
-        {regulars.map((cat, idx) => (
-          <CheckItem
-            key={cat.id}
-            focusKey={`hide-series-cat-item-${idx}`}
-            label={cat.label}
-            count={cat.count}
-            checked={hiddenCategoryIds.includes(cat.id)}
-            isLast={idx === regulars.length - 1}
-            onToggle={() => toggleHidden(cat.id)}
-          />
-        ))}
-      </div>
-      <div className="mt-6 flex justify-end">
-        <ModalCloseBtn focusKey="hide-series-cat-close" onPress={onClose} />
-      </div>
-    </ModalBase>
-  );
-}
-
 // ─── Modal: Dil Seçimi ───────────────────────────────────────────────────────
 
 const LANGUAGES: { code: Language; name: string; tag: string }[] = [
-  { code: 'tr', name: 'Türkçe',   tag: 'TR' },
-  { code: 'en', name: 'English',  tag: 'EN' },
-  { code: 'de', name: 'Deutsch',  tag: 'DE' },
-  { code: 'fr', name: 'Français', tag: 'FR' },
-  { code: 'es', name: 'Español',  tag: 'ES' },
+  { code: 'vi', name: 'Tiếng Việt', tag: 'VI' },
+  { code: 'en', name: 'English',    tag: 'EN' },
 ];
 
 // ─── Focusable language row ───────────────────────────────────────────────────
@@ -786,8 +687,6 @@ type Modal =
   | 'parental-change'        // change (mevcut + yeni)
   | 'parental-remove'        // remove (mevcut doğrula → sil)
   | 'hide-categories'        // Canlı TV kategorileri
-  | 'hide-vod-categories'    // Film kategorileri
-  | 'hide-series-categories' // Dizi kategorileri
   | 'language'               // Dil seçimi
   | 'subtitle-settings'     // Altyazı ayarları
   | null;
@@ -817,41 +716,9 @@ export function SettingsScreen() {
     useToast.getState().show(t('settings.history_channels.cleared'));
   }, [t]);
 
-  const handleClearMovieHistory = useCallback(() => {
-    const moviesState = useMoviesStore.getState();
-    if (moviesState.activeCategory === '__recent__' || moviesState.activeCategory === '__resume__') {
-      const firstRegular = moviesState.categories.find(category =>
-        category.id !== '__recent__' && category.id !== '__resume__' && category.id !== '__favorites__'
-      );
-      moviesState.setActiveCategory(firstRegular?.id ?? '');
-    }
-    useMoviesStore.setState({ watchProgress: {}, recentIds: [] });
-    useMoviesStore.getState()._updateSpecials();
-    useMoviesStore.getState()._recompute();
-    useToast.getState().show(t('settings.history_movies.cleared'));
-  }, [t]);
-
-  const handleClearSeriesHistory = useCallback(() => {
-    const seriesState = useSeriesStore.getState();
-    if (seriesState.activeCategory === '__recent__' || seriesState.activeCategory === '__resume__') {
-      const firstRegular = seriesState.categories.find(category =>
-        category.id !== '__recent__' && category.id !== '__resume__' && category.id !== '__watchlist__'
-      );
-      seriesState.setActiveCategory(firstRegular?.id ?? '');
-    }
-    useSeriesStore.setState({ watchProgress: {}, currentEpisode: {}, recentIds: [] });
-    useSeriesStore.getState()._updateSpecials();
-    useSeriesStore.getState()._recompute();
-    useToast.getState().show(t('settings.history_series.cleared'));
-  }, [t]);
-
   // ── Dynamic values ──────────────────────────────────────────────────────────
   const hiddenCount = hiddenCategories.size;
-  const hiddenVodCount = useMoviesStore((s) => s.hiddenCategoryIds).length;
-  const hiddenSeriesCount = useSeriesStore((s) => s.hiddenCategoryIds).length;
   const recentCount = usePlaylistStore((s) => s.recentIds).length;
-  const watchedMovieCount = useMoviesStore((s) => Object.keys(s.watchProgress).length);
-  const watchedSeriesCount = useSeriesStore((s) => Object.keys(s.watchProgress).length);
 
   type FullCard = {
     id: string;
@@ -904,22 +771,6 @@ export function SettingsScreen() {
       badge: { label: hiddenCount > 0 ? t('settings.badge.on') : t('settings.badge.off'), variant: hiddenCount > 0 ? 'on' : 'off' },
       onPress: () => setModal('hide-categories'),
     },
-    {
-      id: 'privacy-4',
-      icon: <IconEyeOff />,
-      title: t('settings.hide_movies.title'),
-      subtitle: hiddenVodCount > 0 ? t('settings.hide_movies.hidden_count', { count: hiddenVodCount }) : t('settings.hide_movies.all_visible'),
-      badge: { label: hiddenVodCount > 0 ? t('settings.badge.on') : t('settings.badge.off'), variant: hiddenVodCount > 0 ? 'on' : 'off' },
-      onPress: () => setModal('hide-vod-categories'),
-    },
-    {
-      id: 'privacy-5',
-      icon: <IconEyeOff />,
-      title: t('settings.hide_series.title'),
-      subtitle: hiddenSeriesCount > 0 ? t('settings.hide_series.hidden_count', { count: hiddenSeriesCount }) : t('settings.hide_series.all_visible'),
-      badge: { label: hiddenSeriesCount > 0 ? t('settings.badge.on') : t('settings.badge.off'), variant: hiddenSeriesCount > 0 ? 'on' : 'off' },
-      onPress: () => setModal('hide-series-categories'),
-    },
   ];
 
   const historyCards: FullCard[] = [
@@ -929,20 +780,6 @@ export function SettingsScreen() {
       title: t('settings.history_channels.title'),
       subtitle: recentCount > 0 ? t('settings.history_channels.count', { count: recentCount }) : t('settings.history_channels.empty'),
       onPress: handleClearChannelHistory,
-    },
-    {
-      id: 'history-1',
-      icon: <IconTrash />,
-      title: t('settings.history_movies.title'),
-      subtitle: watchedMovieCount > 0 ? t('settings.history_movies.count', { count: watchedMovieCount }) : t('settings.history_movies.empty'),
-      onPress: handleClearMovieHistory,
-    },
-    {
-      id: 'history-2',
-      icon: <IconTrash />,
-      title: t('settings.history_series.title'),
-      subtitle: watchedSeriesCount > 0 ? t('settings.history_series.count', { count: watchedSeriesCount }) : t('settings.history_series.empty'),
-      onPress: handleClearSeriesHistory,
     },
   ];
 
@@ -1115,18 +952,6 @@ export function SettingsScreen() {
       {modal === 'hide-categories' && (
         <HideCategoriesModal
           onClose={() => { setModal(null); setTimeout(() => setFocus('settings-card-privacy-3'), 50); }}
-        />
-      )}
-
-      {modal === 'hide-vod-categories' && (
-        <HideVodCategoriesModal
-          onClose={() => { setModal(null); setTimeout(() => setFocus('settings-card-privacy-4'), 50); }}
-        />
-      )}
-
-      {modal === 'hide-series-categories' && (
-        <HideSeriesCategoriesModal
-          onClose={() => { setModal(null); setTimeout(() => setFocus('settings-card-privacy-5'), 50); }}
         />
       )}
 

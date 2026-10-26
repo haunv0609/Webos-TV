@@ -15,9 +15,6 @@
     "no_channel_watched": "No channels watched yet.",
     "start_live_tv": "Go to Live TV to get started.",
     "go_live_tv": "Go to Live TV",
-    "where_left_off": "Where You Left Off",
-    "first_use": "First Use",
-    "continue": "Resume",
     "all_channels": "All Channels",
     "sections_title": "Sections",
     "now_on_air": "Now On Air",
@@ -66,10 +63,7 @@
     "resume_title": "Resume where you left off?",
     "resume_subtitle": "You can continue from minute {{minutes}}",
     "resume_continue": "Resume",
-    "resume_restart": "Start Over",
-    "previous_episode": "Previous Episode",
-    "next_episode": "Next Episode",
-    "next_episode_countdown": "Next episode starts in {{count}} seconds"
+    "resume_restart": "Start Over"
   },
   "channel_list": {
     "all": "All",

@@ -3,11 +3,8 @@
 
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import tr from './locales/tr.json';
+import vi from './locales/vi.json';
 import en from './locales/en.json';
-import de from './locales/de.json';
-import fr from './locales/fr.json';
-import es from './locales/es.json';
 
 // Read the persisted language from localStorage before any store is created.
 // Matches the 'zui-settings' zustand persist key used by settingsStore.
@@ -17,24 +14,21 @@ function getPersistedLanguage(): string {
     if (raw) {
       const parsed = JSON.parse(raw) as { state?: { language?: string } };
       const lang = parsed.state?.language;
-      if (lang && ['tr', 'en', 'de', 'fr', 'es'].includes(lang)) return lang;
+      if (lang && ['vi', 'en'].includes(lang)) return lang;
     }
   } catch { /* ignore – localStorage may be unavailable */ }
-  return 'tr';
+  return 'vi';
 }
 
 void i18n
   .use(initReactI18next)
   .init({
     resources: {
-      tr: { translation: tr },
+      vi: { translation: vi },
       en: { translation: en },
-      de: { translation: de },
-      fr: { translation: fr },
-      es: { translation: es },
     },
     lng: getPersistedLanguage(),
-    fallbackLng: 'tr',
+    fallbackLng: 'vi',
     interpolation: {
       escapeValue: false, // React already escapes
     },
