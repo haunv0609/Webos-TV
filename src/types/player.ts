@@ -7,16 +7,6 @@ export type StreamSource = {
   userAgent?: string;
   headers?: Record<string, string>;
   resumeAtSeconds?: number;
-  playbackContext?:
-    | { kind: 'movie'; contentId: string }
-    | {
-        kind: 'series';
-        seriesId: string;
-        seriesTitle: string;
-        seasonKey: string;
-        episodeId: string;
-        episodeNum: number;
-      };
 };
 
 export type PlayerErrorCode =

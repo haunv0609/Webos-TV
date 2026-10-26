@@ -7,8 +7,6 @@ import { ChannelList } from '@/screens/ChannelList';
 import { EPGScreen } from '@/screens/EPGScreen';
 import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
-import { MoviesScreen } from '@/screens/MoviesScreen';
-import { SeriesScreen } from '@/screens/SeriesScreen';
 import { PlaylistsScreen } from '@/screens/PlaylistsScreen';
 import { SplashScreen } from '@/components/SplashScreen';
 import { RemoteRouter } from '@/components/RemoteRouter';
@@ -141,20 +139,6 @@ export default function App() {
           return;
         }
 
-        // Movies screen — focus back button (sidebar top)
-        if (currentScreen === 'movies') {
-          console.warn('[App] No focused component after 1s — forcing MOVIES_BACK_HOME');
-          setNavFocus('MOVIES_BACK_HOME');
-          return;
-        }
-
-        // Series screen — focus back button (sidebar top)
-        if (currentScreen === 'series') {
-          console.warn('[App] No focused component after 1s — forcing SERIES_BACK_HOME');
-          setNavFocus('SERIES_BACK_HOME');
-          return;
-        }
-
         const s = usePlaylistStore.getState();
         const lastFocused = s.lastFocusedChannelId;
         if (lastFocused && s.visibleChannels.some((c) => c.id === lastFocused)) {
@@ -182,8 +166,6 @@ export default function App() {
       case 'channelList': return <ChannelList />;
       case 'epg':         return <EPGScreen />;
       case 'settings':    return <SettingsScreen />;
-      case 'movies':      return <MoviesScreen />;
-      case 'series':      return <SeriesScreen />;
       case 'playlists':   return <PlaylistsScreen />;
       case 'player':      return <VideoPlayer />;
       default:            return <SplashScreen />;

@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useFocusable, FocusContext } from '@noriginmedia/norigin-spatial-navigation';
 import { usePlayerStore } from '@/state/playerStore';
 import { useUIStore } from '@/state/uiStore';
-import { useSeriesStore } from '@/state/seriesStore';
-import { useMoviesStore } from '@/state/moviesStore';
 import { useSettingsStore, SUBTITLE_SIZE_PX } from '@/state/settingsStore';
 import { usePlayer } from '@/hooks/usePlayer';
 import { usePlayerController } from '@/hooks/usePlayerController';
@@ -26,9 +24,6 @@ export function VideoPlayer() {
   const currentSource = usePlayerStore((s) => s.currentSource);
   const setSource = usePlayerStore((s) => s.setSource);
   const clearError = usePlayerStore((s) => s.setError);
-  const playingEpisode = useSeriesStore((s) => s.playingEpisode);
-  const canPlayAdjacentEpisode = useSeriesStore((s) => s.canPlayAdjacentEpisode);
-  const playAdjacentEpisode = useSeriesStore((s) => s.playAdjacentEpisode);
   const [resumeHandledSourceId, setResumeHandledSourceId] = useState<string | null>(null);
   const [pendingResumeSeconds, setPendingResumeSeconds] = useState<number | null>(null);
   const savedResumeSeconds = currentSource?.resumeAtSeconds ?? 0;
@@ -79,13 +74,6 @@ export function VideoPlayer() {
     );
     return () => clearTimeout(timer);
   }, [currentSource?.id, resumeChoicePending, setFocus]);
-
-  const [autoNextSeconds, setAutoNextSeconds] = useState<number | null>(null);
-  const cancelAutoNext = () => setAutoNextSeconds(null);
-  const { ref: cancelAutoNextRef, focused: cancelAutoNextFocused } = useFocusable({
-    focusKey: 'AUTO_NEXT_CANCEL',
-    onEnterPress: cancelAutoNext,
-  });
 
   // ─── Persistent error state ─────────────────────────────────────────────────
   // Set by onFatalError (all url × strategy combinations exhausted) OR by a
@@ -176,46 +164,6 @@ export function VideoPlayer() {
     }
   }, [pendingResumeSeconds, playerController, setFocus]);
 
-  const persistPlaybackPosition = useCallback((completed = false) => {
-    const video = videoRef.current;
-    const context = currentSource?.playbackContext;
-    if (!video || !context || !Number.isFinite(video.duration) || video.duration <= 0) return;
-    const position = completed ? video.duration : video.currentTime;
-    if (!completed && (!Number.isFinite(position) || position < 5)) return;
-
-    if (context.kind === 'movie') {
-      useMoviesStore.getState().setPlaybackCheckpoint(context.contentId, position, video.duration);
-    } else {
-      useSeriesStore.getState().setPlaybackCheckpoint(context, position, video.duration);
-    }
-  }, [currentSource?.playbackContext]);
-
-  // Yerel depolamayı yormamak için oynarken 5 saniyede bir; duraklatma, bitiş,
-  // BACK ve unmount anlarında ayrıca kesin checkpoint yaz.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !currentSource?.playbackContext) return;
-    let lastSavedSecond = -1;
-    const onTimeUpdate = () => {
-      const bucket = Math.floor(video.currentTime / 5);
-      if (bucket > lastSavedSecond) {
-        lastSavedSecond = bucket;
-        persistPlaybackPosition(false);
-      }
-    };
-    const onPause = () => persistPlaybackPosition(false);
-    const onEnded = () => persistPlaybackPosition(true);
-    video.addEventListener('timeupdate', onTimeUpdate);
-    video.addEventListener('pause', onPause);
-    video.addEventListener('ended', onEnded);
-    return () => {
-      persistPlaybackPosition(false);
-      video.removeEventListener('timeupdate', onTimeUpdate);
-      video.removeEventListener('pause', onPause);
-      video.removeEventListener('ended', onEnded);
-    };
-  }, [currentSource?.id, currentSource?.playbackContext, persistPlaybackPosition]);
-
   // ─── Post-attach non-recoverable error → persistent error overlay ───────────
   // strategy.onError() fires mid-stream (after successful attach). Fatal
   // mid-stream errors have no URL fallback left — show persistent overlay.
@@ -225,44 +173,7 @@ export function VideoPlayer() {
     }
   }, [error, persistentError]);
 
-  // Episode completion starts a cancellable 10-second next-episode countdown.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleEnded = () => {
-      const isCurrentEpisode = Boolean(
-        playingEpisode && currentSource?.id === `series-ep-${playingEpisode.episodeId}`
-      );
-      if (isCurrentEpisode && canPlayAdjacentEpisode('next')) {
-        setAutoNextSeconds(10);
-        setTimeout(() => setFocus('AUTO_NEXT_CANCEL'), 0);
-      }
-    };
-
-    video.addEventListener('ended', handleEnded);
-    return () => video.removeEventListener('ended', handleEnded);
-  }, [playingEpisode, currentSource?.id, canPlayAdjacentEpisode, setFocus]);
-
-  useEffect(() => {
-    if (autoNextSeconds === null) return;
-    if (autoNextSeconds <= 0) {
-      setAutoNextSeconds(null);
-      playAdjacentEpisode('next');
-      return;
-    }
-    const timer = setTimeout(() => {
-      setAutoNextSeconds(value => value === null ? null : value - 1);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [autoNextSeconds, playAdjacentEpisode]);
-
-  useEffect(() => {
-    setAutoNextSeconds(null);
-  }, [currentSource?.id]);
-
   const handleBack = () => {
-    persistPlaybackPosition(false);
     setPersistentError(null);
     clearError(null);
     navigate(lastMainScreen);
@@ -360,31 +271,6 @@ export function VideoPlayer() {
           attempts={persistentError.attempts}
           onBack={handleBack}
         />
-      )}
-
-      {autoNextSeconds !== null && (
-        <div className="absolute inset-0 z-30 grid place-items-center bg-black/55">
-          <div className="w-[520px] rounded-2xl border border-[#E8B567]/35 bg-[#131110]/95 px-8 py-7 text-center shadow-[0_30px_80px_-25px_#000]">
-            <div className="font-serif text-[26px] text-white">
-              {t('player.next_episode_countdown', {
-                count: autoNextSeconds,
-                defaultValue: `Sonraki bölüm ${autoNextSeconds} saniye içinde başlayacak`,
-              })}
-            </div>
-            <button
-              ref={cancelAutoNextRef as React.RefObject<HTMLButtonElement>}
-              onClick={cancelAutoNext}
-              className={[
-                'mt-5 px-6 h-11 rounded-full border text-[12px] uppercase tracking-[0.25em] font-semibold transition-all',
-                cancelAutoNextFocused
-                  ? 'border-[#E8B567]/65 bg-[#E8B567]/10 text-[#E8B567] shadow-[0_0_22px_-7px_#E8B567]'
-                  : 'border-white/20 text-white/60',
-              ].join(' ')}
-            >
-              {t('common.cancel')}
-            </button>
-          </div>
-        </div>
       )}
 
       <OSD controller={playerController} />

@@ -8,14 +8,12 @@ import { useSettingsStore, LANGUAGE_LOCALES, type TimeFormat, type Language } fr
 
 // ─── Active nav determination ─────────────────────────────────────────────────
 
-type NavId = 'home' | 'live' | 'movies' | 'series' | 'settings';
+type NavId = 'home' | 'live' | 'settings';
 
 function getActiveNavId(screen: Screen): NavId {
   switch (screen) {
     case 'channelList':
     case 'epg':      return 'live';
-    case 'movies':   return 'movies';
-    case 'series':   return 'series';
     case 'settings': return 'settings';
     default:         return 'home';
   }
@@ -38,25 +36,6 @@ const LiveTVIcon = () => (
     <rect x="2.5" y="5" width="19" height="13" rx="2" />
     <path d="m7 2 5 3 5-3" />
     <circle cx="18" cy="9" r="0.6" fill="currentColor" />
-  </svg>
-);
-
-const MoviesIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"
-    strokeLinecap="round" strokeLinejoin="round" className="w-[22px] h-[22px]">
-    <rect x="2.5" y="3.5" width="19" height="17" rx="1.5" />
-    <path d="M2.5 8h3M2.5 12h3M2.5 16h3M18.5 8h3M18.5 12h3M18.5 16h3" />
-    <path d="M5.5 3.5v17M18.5 3.5v17" />
-  </svg>
-);
-
-const SeriesIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"
-    strokeLinecap="round" strokeLinejoin="round" className="w-[22px] h-[22px]">
-    <circle cx="7.5" cy="12" r="5" />
-    <circle cx="16.5" cy="12" r="5" />
-    <circle cx="7.5" cy="12" r="1" fill="currentColor" />
-    <circle cx="16.5" cy="12" r="1" fill="currentColor" />
   </svg>
 );
 
@@ -182,7 +161,7 @@ function Clock() {
 
 // ─── TopBar ───────────────────────────────────────────────────────────────────
 
-const TOPBAR_SCREENS: Screen[] = ['home', 'channelList', 'epg', 'settings', 'movies', 'series', 'playlists'];
+const TOPBAR_SCREENS: Screen[] = ['home', 'channelList', 'epg', 'settings', 'playlists'];
 
 export function TopBar() {
   const { t }         = useTranslation();
@@ -215,8 +194,6 @@ export function TopBar() {
         <nav className="flex items-center gap-8 ml-auto mr-2">
           <NavButton focusKey="topbar-nav-home"     icon={<HomeIcon />}     label={t('nav.home')}     active={active === 'home'}     onPress={() => navigate('home')} />
           <NavButton focusKey="topbar-nav-live"     icon={<LiveTVIcon />}   label={t('nav.live')}     active={active === 'live'}     onPress={() => navigate('channelList')} />
-          <NavButton focusKey="topbar-nav-movies"   icon={<MoviesIcon />}   label={t('nav.movies')}   active={active === 'movies'}   onPress={() => navigate('movies')} />
-          <NavButton focusKey="topbar-nav-series"   icon={<SeriesIcon />}   label={t('nav.series')}   active={active === 'series'}   onPress={() => navigate('series')} />
           <NavButton focusKey="topbar-nav-settings" icon={<SettingsIcon />} label={t('nav.settings')} active={active === 'settings'} onPress={() => navigate('settings')} />
         </nav>
 

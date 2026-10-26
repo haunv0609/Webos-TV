@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 import { usePlayerStore } from '@/state/playerStore';
-import { useSeriesStore } from '@/state/seriesStore';
 import { useSettingsStore, LANGUAGE_LOCALES } from '@/state/settingsStore';
 import { useToast } from '@/components/ui/Toast';
 import type { PlayerController } from '@/hooks/usePlayerController';
@@ -131,10 +130,6 @@ interface ControlsProps {
 
 function BottomControls({ controller }: ControlsProps) {
   const { t } = useTranslation();
-  const currentSource = usePlayerStore(s => s.currentSource);
-  const playingEpisode = useSeriesStore(s => s.playingEpisode);
-  const canPlayAdjacentEpisode = useSeriesStore(s => s.canPlayAdjacentEpisode);
-  const playAdjacentEpisode = useSeriesStore(s => s.playAdjacentEpisode);
   const { currentTime, duration, paused, isLive, canSeek, seeking } = controller;
   const progress = isLive || duration === 0 ? 0 : Math.min(1, currentTime / duration);
 
@@ -168,12 +163,6 @@ function BottomControls({ controller }: ControlsProps) {
   });
   timelineSetFocusRef.current = setTimelineFocus;
 
-  const isEpisode = Boolean(
-    playingEpisode && currentSource?.id === `series-ep-${playingEpisode.episodeId}`
-  );
-  const canPlayPrevious = isEpisode && canPlayAdjacentEpisode('previous');
-  const canPlayNext = isEpisode && canPlayAdjacentEpisode('next');
-
   const rewindFocusable = useFocusable({
     focusKey: 'OSD_REWIND',
     focusable: canSeek,
@@ -187,16 +176,6 @@ function BottomControls({ controller }: ControlsProps) {
     focusKey: 'OSD_FORWARD',
     focusable: canSeek,
     onEnterPress: () => controller.seekBy(10),
-  });
-  const previousEpisodeFocusable = useFocusable({
-    focusKey: 'OSD_PREVIOUS_EPISODE',
-    focusable: Boolean(canPlayPrevious),
-    onEnterPress: () => { if (canPlayPrevious) playAdjacentEpisode('previous'); },
-  });
-  const nextEpisodeFocusable = useFocusable({
-    focusKey: 'OSD_NEXT_EPISODE',
-    focusable: Boolean(canPlayNext),
-    onEnterPress: () => { if (canPlayNext) playAdjacentEpisode('next'); },
   });
 
   return (
@@ -233,29 +212,6 @@ function BottomControls({ controller }: ControlsProps) {
 
       {/* Controls row — subtitle CC button is anchored to the right edge */}
       <div className="relative flex items-center justify-center gap-6">
-        {isEpisode && (
-          <button
-            ref={previousEpisodeFocusable.ref as React.RefObject<HTMLButtonElement>}
-            onClick={() => { if (canPlayPrevious) playAdjacentEpisode('previous'); }}
-            disabled={!canPlayPrevious}
-            className={[
-              'flex flex-col items-center gap-1 transition-all',
-              canPlayPrevious ? 'text-white/70' : 'text-white/20',
-              previousEpisodeFocusable.focused ? 'text-[#E8B567] scale-[1.06]' : '',
-            ].join(' ')}
-          >
-            <div className={[
-              'w-11 h-11 rounded-full border grid place-items-center transition-all',
-              previousEpisodeFocusable.focused ? 'border-[#E8B567]/60 bg-[#E8B567]/10 shadow-[0_0_20px_-6px_#E8B567]' : 'border-white/20',
-            ].join(' ')}>
-              <span className="text-[17px]">|◀</span>
-            </div>
-            <span className="text-[9px] uppercase tracking-[0.16em] font-semibold">
-              {t('player.previous_episode', { defaultValue: 'Önceki Bölüm' })}
-            </span>
-          </button>
-        )}
-
         {/* Rewind 10s */}
         {!isLive && (
           <button
@@ -327,29 +283,6 @@ function BottomControls({ controller }: ControlsProps) {
               </svg>
             </div>
             <span className="text-[9px] uppercase tracking-[0.2em] font-semibold">+10s</span>
-          </button>
-        )}
-
-        {isEpisode && (
-          <button
-            ref={nextEpisodeFocusable.ref as React.RefObject<HTMLButtonElement>}
-            onClick={() => { if (canPlayNext) playAdjacentEpisode('next'); }}
-            disabled={!canPlayNext}
-            className={[
-              'flex flex-col items-center gap-1 transition-all',
-              canPlayNext ? 'text-white/70' : 'text-white/20',
-              nextEpisodeFocusable.focused ? 'text-[#E8B567] scale-[1.06]' : '',
-            ].join(' ')}
-          >
-            <div className={[
-              'w-11 h-11 rounded-full border grid place-items-center transition-all',
-              nextEpisodeFocusable.focused ? 'border-[#E8B567]/60 bg-[#E8B567]/10 shadow-[0_0_20px_-6px_#E8B567]' : 'border-white/20',
-            ].join(' ')}>
-              <span className="text-[17px]">▶|</span>
-            </div>
-            <span className="text-[9px] uppercase tracking-[0.16em] font-semibold">
-              {t('player.next_episode', { defaultValue: 'Sonraki Bölüm' })}
-            </span>
           </button>
         )}
 
