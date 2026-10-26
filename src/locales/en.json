@@ -2,8 +2,6 @@
   "nav": {
     "home": "Home",
     "live": "Live TV",
-    "movies": "Movies",
-    "series": "Series",
     "settings": "Settings"
   },
   "home": {
@@ -14,8 +12,6 @@
     "greeting_night": "Good night",
     "channels_loaded": "{{count}} channels loaded",
     "system_ready": "System ready",
-    "pages_active": "2 pages active",
-    "pages_wip": "3 pages in development",
     "no_channel_watched": "No channels watched yet.",
     "start_live_tv": "Go to Live TV to get started.",
     "go_live_tv": "Go to Live TV",
@@ -24,7 +20,6 @@
     "continue": "Resume",
     "all_channels": "All Channels",
     "sections_title": "Sections",
-    "sections_count": "5 targets · 5 active",
     "now_on_air": "Now On Air",
     "featured_channels": "{{count}} featured channels",
     "current_list": "Active List",
@@ -33,26 +28,17 @@
     "unlimited": "Unlimited",
     "channel_subtitle_count": "{{count}} channels",
     "channel_subtitle_empty": "— channels",
-    "movies_subtitle": "VOD · All movies",
-    "series_subtitle": "VOD · TV Series",
     "playlists_subtitle": "M3U · Xtream · Cloud",
-    "settings_subtitle": "12 preferences",
-    "status_channels": "{{count}} channels loaded · 2 pages active · 3 in development",
-    "status_ready": "System ready · 2 pages active · 3 in development",
+    "settings_subtitle": "{{count}} preferences",
     "remaining_h_m": "−{{h}}h {{m}}m left",
     "remaining_h": "−{{h}}h left",
     "remaining_m": "−{{m}}m left",
     "remaining_h_m_short": "−{{h}}h {{m}}m",
     "remaining_h_short": "−{{h}}h",
-    "remaining_m_short": "−{{m}}m"
-  },
-  "movies": {
-    "loading": "Loading movies…",
-    "error": "Failed to load movies."
-  },
-  "series": {
-    "loading": "Loading series…",
-    "error": "Failed to load series."
+    "remaining_m_short": "−{{m}}m",
+    "sections_count": "{{count}} targets · {{active}} active",
+    "status_channels": "{{count}} channels loaded",
+    "status_ready": "System ready"
   },
   "common": {
     "retry": "Try Again",
@@ -61,47 +47,6 @@
     "back": "← Back",
     "open": "Open",
     "yes": "Yes"
-  },
-  "hero": {
-    "focus_movie": "Focus a movie",
-    "focus_series": "Focus a series",
-    "where_left_off": "Where You Left Off",
-    "new_added": "New",
-    "featured": "Featured",
-    "watch": "Watch",
-    "continue_time": "Resume · {{time}} left",
-    "details": "Details",
-    "favorite": "Favorite",
-    "favorited": "Favorited",
-    "fav_added": "Added to favorites",
-    "fav_removed": "Removed from favorites",
-    "fav_add_aria": "Add to favorites",
-    "fav_remove_aria": "Remove from favorites",
-    "first_episode": "Play First Episode",
-    "continue_episode": "Resume · S{{season}}·E{{episode}} · {{remaining}}",
-    "view_episodes": "View Episodes",
-    "watchlist_add": "Add to Watchlist",
-    "watchlist_remove": "In Watchlist",
-    "watchlist_added": "Added to watchlist",
-    "watchlist_removed": "Removed from watchlist",
-    "watchlist_add_aria": "Add to watchlist",
-    "watchlist_remove_aria": "Remove from watchlist",
-    "seasons": "{{count}} seasons",
-    "episodes": "{{count}} episodes",
-    "season_label": "Season",
-    "one_season": "1 season"
-  },
-  "episode_browser": {
-    "episodes": "Episodes",
-    "season": "Season {{num}}",
-    "episode_fallback": "Episode {{num}}",
-    "loading": "Loading episodes…",
-    "error": "Failed to load",
-    "retry": "Try Again",
-    "empty": "No episodes in this season",
-    "back_hint": "← Back · Close",
-    "count": "{{count}} episodes",
-    "season_label": "Season"
   },
   "player": {
     "play": "Play",
@@ -117,7 +62,14 @@
     "retry": "Try again",
     "stream_error": "Stream failed ({{count}} attempt(s) exhausted)",
     "sub_on": "on",
-    "sub_off": "off"
+    "sub_off": "off",
+    "resume_title": "Resume where you left off?",
+    "resume_subtitle": "You can continue from minute {{minutes}}",
+    "resume_continue": "Resume",
+    "resume_restart": "Start Over",
+    "previous_episode": "Previous Episode",
+    "next_episode": "Next Episode",
+    "next_episode_countdown": "Next episode starts in {{count}} seconds"
   },
   "channel_list": {
     "all": "All",
@@ -241,33 +193,11 @@
       "all_visible": "All visible",
       "hidden_count": "{{count}} categories hidden"
     },
-    "hide_movies": {
-      "title": "Hide Movie Categories",
-      "all_visible": "All visible",
-      "hidden_count": "{{count}} categories hidden"
-    },
-    "hide_series": {
-      "title": "Hide Series Categories",
-      "all_visible": "All visible",
-      "hidden_count": "{{count}} categories hidden"
-    },
     "history_channels": {
       "title": "Clear Channel History",
       "count": "{{count}} channels",
       "empty": "Empty",
       "cleared": "Channel history cleared"
-    },
-    "history_movies": {
-      "title": "Clear Movie History",
-      "count": "{{count}} movies",
-      "empty": "Empty",
-      "cleared": "Movie history cleared"
-    },
-    "history_series": {
-      "title": "Clear Series History",
-      "count": "{{count}} series",
-      "empty": "Empty",
-      "cleared": "Series history cleared"
     },
     "v2_coming": "Will be activated in v2",
     "time_format": {
@@ -296,12 +226,7 @@
   "sidebar": {
     "library": "Library",
     "categories": "Categories",
-    "resume": "Continue Watching",
-    "favorites": "Favorites",
-    "watchlist": "Watchlist",
     "home": "Home",
-    "search_movies": "Search movies or categories…",
-    "search_series": "Search series or categories…",
     "search_channels": "Search channels…",
     "no_results": "No categories match your search"
   },
@@ -309,16 +234,6 @@
     "hide_categories": {
       "title": "Hide Live Categories",
       "description": "Hidden categories won't appear in the channel list. No PIN required."
-    },
-    "hide_vod_categories": {
-      "title": "Hide Movie Categories",
-      "description": "Hidden categories won't appear in the movie list.",
-      "not_loaded": "Movies not loaded yet. Visit the Movies page first."
-    },
-    "hide_series_categories": {
-      "title": "Hide Series Categories",
-      "description": "Hidden categories won't appear in the series list.",
-      "not_loaded": "Series not loaded yet. Visit the Series page first."
     },
     "parental": {
       "title": "Parental Controls",
@@ -375,21 +290,6 @@
       "cleared": "Runtime configuration cleared"
     },
     "close": "Close"
-  },
-  "grid": {
-    "sort_added": "Recently Added",
-    "sort_rating": "Highest Rated",
-    "sort_year": "Newest",
-    "sort_title": "A → Z",
-    "sort_new_episode": "New Episode",
-    "search_results": "Search Results",
-    "title_count": "{{count}} titles",
-    "this_week": "This week",
-    "new_count": "+{{count}} new",
-    "new_episode_count": "+{{count}} new episodes",
-    "all": "All",
-    "series_empty": "No series in this category.",
-    "movies_empty": "No movies in this category."
   },
   "epg": {
     "title": "📡 TV Guide",
