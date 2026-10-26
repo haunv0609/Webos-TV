@@ -6,25 +6,19 @@ import { persist } from 'zustand/middleware';
 import i18n from '@/i18n';
 
 export type TimeFormat    = '24h' | '12h';
-export type Language      = 'tr' | 'en' | 'de' | 'fr' | 'es';
+export type Language      = 'vi' | 'en';
 export type SubtitleSize  = 'small' | 'medium' | 'large';
 
 /** Display name in the language's own script */
 export const LANGUAGE_NAMES: Record<Language, string> = {
-  tr: 'Türkçe',
+  vi: 'Tiếng Việt',
   en: 'English',
-  de: 'Deutsch',
-  fr: 'Français',
-  es: 'Español',
 };
 
 /** BCP-47 locale tag — used for Intl date/time formatting */
 export const LANGUAGE_LOCALES: Record<Language, string> = {
-  tr: 'tr-TR',
+  vi: 'vi-VN',
   en: 'en-US',
-  de: 'de-DE',
-  fr: 'fr-FR',
-  es: 'es-ES',
 };
 
 /** CSS font-size applied to the subtitle overlay */
@@ -49,7 +43,7 @@ export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set) => ({
       timeFormat:      '24h',
-      language:        'tr',
+      language:        'vi',
       subtitleEnabled: true,
       subtitleSize:    'medium',
 

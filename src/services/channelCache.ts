@@ -42,7 +42,7 @@ export const channelCache = {
       if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
     }
     return Array.from(counts.entries())
-      .sort(([a], [b]) => a.localeCompare(b, 'tr'))
+      .sort(([a], [b]) => a.localeCompare(b, 'vi'))
       .map(([name, count]) => ({ name, count }));
   },
 
@@ -65,7 +65,7 @@ export const channelCache = {
     await tx.done;
 
     return Array.from(counts.entries())
-      .sort(([a], [b]) => a.localeCompare(b, 'tr'))
+      .sort(([a], [b]) => a.localeCompare(b, 'vi'))
       .map(([name, count]) => ({ name, count }));
   },
 

@@ -1,7 +1,7 @@
 # ZUI IPTV Player
 
 > Modern, keyboard/remote-navigable IPTV client built for **LG webOS TVs**.  
-> Supports M3U playlists, Xtream Codes (Live · VOD · Series), EPG and more.
+> Supports M3U playlists, Xtream Codes (Live), EPG and more.
 
 ---
 
@@ -13,11 +13,7 @@
 |------|---------|
 | ![Home](docs/screenshots/home.png) | ![Live TV](docs/screenshots/live.png) |
 
-| Movies | Series |
-|--------|--------|
-| ![Movies](docs/screenshots/movies.png) | ![Series](docs/screenshots/series.png) |
-
-| Player (VOD) | Settings |
+| Player | Settings |
 |--------------|----------|
 | ![Player](docs/screenshots/player.png) | ![Settings](docs/screenshots/settings.png) |
 
@@ -26,15 +22,13 @@
 ## Features
 
 - 📺 **Live TV** — channel list with categories, EPG now/next, favorites, recently watched
-- 🎬 **Movies (VOD)** — full poster grid, sort by date/rating/year/title, favorites, resume progress
-- 📼 **Series** — season/episode browser with continue-watching support
 - 📡 **EPG** — XMLTV guide with timeline view
 - 🔄 **Multi-source** — M3U URL + Xtream Codes, multiple sources simultaneously
 - 🛡️ **Safe 1.0.1 release posture** — legacy Cloud Sync is disabled until its
   authentication and credential-transfer protocol is replaced
 - 🔤 **Subtitles** — CC quick-toggle in player OSD, size control (small/medium/large)
 - 🔒 **Parental control** — PIN-protected categories
-- 🌍 **5 languages** — Turkish, English, German, French, Spanish
+- 🌍 **2 languages** — Vietnamese (default), English
 - ⌨️ **Full D-pad navigation** — spatial nav for LG Magic Remote and standard remote
 - 🎨 **Aurora design system** — dark theme, gold accent, glassmorphism cards
 
@@ -154,15 +148,12 @@ separate, approval-gated task.
 
 ## Localization
 
-The app ships with 5 languages selectable from Settings:
+The app ships with 2 languages selectable from Settings:
 
 | Code | Language |
 |------|----------|
-| `tr` | Türkçe (default) |
+| `vi` | Tiếng Việt (default) |
 | `en` | English |
-| `de` | Deutsch |
-| `fr` | Français |
-| `es` | Español |
 
 Translation files: [`src/locales/`](src/locales/)
 
@@ -176,12 +167,12 @@ src/
 │   ├── player/       # VideoPlayer, OSD, ErrorOverlay
 │   └── ui/           # Toast, Spinner, modal primitives
 ├── hooks/            # usePlayer, useRemote, useAudioWatchdog, …
-├── screens/          # Full-page screens (Home, Live, Movies, Series, …)
+├── screens/          # Full-page screens (Home, Live, Playlists, Settings, …)
 ├── services/         # API clients, player strategies (Native/HLS/MpegTS)
 │   └── playerStrategies/
 ├── state/            # Zustand stores
 ├── types/            # Shared TypeScript types
-├── locales/          # i18n JSON files (tr, en, de, fr, es)
+├── locales/          # i18n JSON files (vi, en)
 └── workers/          # Web Workers (M3U parser, EPG parser)
 docs/
 ├── ARCHITECTURE.md
