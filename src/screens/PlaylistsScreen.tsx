@@ -10,8 +10,6 @@ import { useUIStore } from '@/state/uiStore';
 import { useToast } from '@/components/ui/Toast';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { usePlaylistStore } from '@/state/playlistStore';
-import { useMoviesStore } from '@/state/moviesStore';
-import { useSeriesStore } from '@/state/seriesStore';
 import { useSettingsStore, LANGUAGE_LOCALES } from '@/state/settingsStore';
 import type { Source } from '@/types/source';
 
@@ -379,16 +377,6 @@ export function PlaylistsScreen() {
   const handleToggleEnabled = async (source: Source) => {
     const becomingEnabled = !source.enabled;
     await toggleSource(source.id, becomingEnabled);
-    // Xtream kaynağı aktif edilince Movies / Series hata durumunu sıfırla;
-    // böylece o ekranlara gidildiğinde otomatik yeniden yükleme tetiklenir.
-    if (becomingEnabled && source.type === 'xtream') {
-      if (useMoviesStore.getState().status === 'error') {
-        useMoviesStore.setState({ status: 'idle' });
-      }
-      if (useSeriesStore.getState().status === 'error') {
-        useSeriesStore.setState({ status: 'idle' });
-      }
-    }
     showToast(t(source.enabled ? 'playlists.deactivated' : 'playlists.activated', { name: source.name }));
   };
 

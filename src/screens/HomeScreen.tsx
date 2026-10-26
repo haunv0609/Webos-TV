@@ -494,22 +494,6 @@ const LiveTVSectionIcon = () => (
     <path d="M9 12.5l4 2.5-4 2.5z" fill="currentColor" stroke="none" />
   </svg>
 );
-const FilmsIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"
-    strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
-    <rect x="2.5" y="3.5" width="19" height="17" rx="1.5" />
-    <path d="M2.5 8h3M2.5 12h3M2.5 16h3M18.5 8h3M18.5 12h3M18.5 16h3" />
-    <path d="M5.5 3.5v17M18.5 3.5v17" />
-  </svg>
-);
-const SeriesSectionIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"
-    strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
-    <rect x="3" y="6" width="18" height="13" rx="2" />
-    <rect x="6" y="3" width="12" height="3" rx="0.8" />
-    <path d="M10 11.5v6l5-3z" fill="currentColor" stroke="none" />
-  </svg>
-);
 const PlaylistIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"
     strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
@@ -552,22 +536,6 @@ function SectionsGrid({
       watermark: totalChannelCount > 0 ? String(totalChannelCount) : '',
       isActive: true,
       onPress: () => navigate('channelList'),
-    },
-    {
-      key: 'movies',
-      icon: <FilmsIcon />,
-      title: t('nav.movies'),
-      subtitle: t('home.movies_subtitle'),
-      isActive: true,
-      onPress: () => navigate('movies'),
-    },
-    {
-      key: 'series',
-      icon: <SeriesSectionIcon />,
-      title: t('nav.series'),
-      subtitle: t('home.series_subtitle'),
-      isActive: true,
-      onPress: () => navigate('series'),
     },
     {
       key: 'playlists',
